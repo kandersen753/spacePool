@@ -10,8 +10,9 @@ public class rollBall : MonoBehaviour
 	MeshRenderer rend;
 	Collider collisionDetector;
 
-
-
+    //ignore collision stuff
+    public GameObject Walls;
+    public GameObject Balls;
 
     //stuff for rotation
     public Transform center;
@@ -33,6 +34,16 @@ public class rollBall : MonoBehaviour
 		rb = GetComponent<Rigidbody> ();
 		rend = GetComponent<MeshRenderer> ();
 		collisionDetector = GetComponent<Collider> ();
+        ignoreChildren(Walls);
+        ignoreChildren(Balls);
+    }
+    
+    void ignoreChildren(GameObject parent)
+    {
+        for (int counter =0; counter<parent.transform.childCount; counter++)
+        {
+            Physics.IgnoreCollision(collisionDetector, parent.transform.GetChild(counter).gameObject.GetComponent<Collider>());
+        }
     }
 
     void FixedUpdate()
@@ -42,16 +53,15 @@ public class rollBall : MonoBehaviour
         //when movechoice is 0 then the input options rotate 
 		if (moveChoice == 0) 
 		{
-			axisUp = new Vector3 (0, Input.GetAxis ("Vertical"), 0);
-			axisRight = new Vector3 (Input.GetAxis ("Horizontal"), 0, 0);
 
-			if (axisUp == new Vector3 (0, 1, 0) || axisUp == new Vector3 (0, -1, 0)) 
+
+			if (Input.GetAxis("Vertical") != 0) 
 			{
 				transform.RotateAround (center.position, transform.right, (rotationSpeed * Input.GetAxis ("Vertical")) * Time.deltaTime);
 				desiredPosition = (transform.position - center.position).normalized * radius + center.position;
 			}
 
-			if (axisRight == new Vector3 (1, 0, 0) || axisRight == new Vector3 (-1, 0, 0))
+			if (Input.GetAxis("Horizontal") != 0)
 			{
 				transform.RotateAround (center.position, transform.forward, (rotationSpeed * Input.GetAxis ("Horizontal")) * Time.deltaTime);
 				desiredPosition = (transform.position - center.position).normalized * radius + center.position;
@@ -77,11 +87,6 @@ public class rollBall : MonoBehaviour
 		{
 			if (Input.GetAxis ("Submit") != 0) 
 			{
-				Vector3 angles = transform.rotation.eulerAngles;
-				angles.x = 0.0f;
-				angles.y = 0.0f;
-				angles.z = 0.0f;
-
 				rend.enabled = true;
 				collisionDetector.enabled = true;
 				transform.position = new Vector3 ((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z)-3);
@@ -94,11 +99,14 @@ public class rollBall : MonoBehaviour
 
 	void OnCollisionEnter (Collision other)
 		{
-			rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-			rb.constraints = RigidbodyConstraints.None;
-			rend.enabled = false;
-			collisionDetector.enabled = false;
-			moveChoice = 2;
+            if (other.gameObject == ball)
+            {
+                rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                rb.constraints = RigidbodyConstraints.None;
+                rend.enabled = false;
+                collisionDetector.enabled = false;
+                moveChoice = 2;
+            }
 		}
 
 }
