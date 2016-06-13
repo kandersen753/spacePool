@@ -6,6 +6,7 @@ TagManager:
   tags:
   - killPlanet
   - planetHit
+  - resetCue
   layers:
   - Default
   - TransparentFX
