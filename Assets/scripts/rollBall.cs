@@ -60,9 +60,11 @@ public class rollBall : MonoBehaviour
         //when movechoice is 0 then the input options rotate 
 		if (moveChoice == 0) 
 		{
+            //reactivate main camera
+            transform.GetChild(0).gameObject.SetActive(true);
 
             //checks for up and down input
-			if (Input.GetAxis("Vertical") != 0) 
+            if (Input.GetAxis("Vertical") != 0) 
 			{
 				transform.RotateAround (center.position, transform.right, (rotationSpeed * Input.GetAxis ("Vertical")) * Time.deltaTime);
 				desiredPosition = (transform.position - center.position).normalized * radius + center.position;
@@ -120,6 +122,10 @@ public class rollBall : MonoBehaviour
                 //disable mesh renderer and collider
                 rend.enabled = false;
                 collisionDetector.enabled = false;
+
+                //disable main camera
+                transform.GetChild(0).gameObject.SetActive(false);
+                
                 moveChoice = 2;
             }
 		}
