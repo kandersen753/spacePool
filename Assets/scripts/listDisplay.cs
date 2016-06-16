@@ -19,7 +19,6 @@ public class listDisplay : MonoBehaviour {
 
     //data trackers 
     private bool gameOver;
-    private int moveChoice;
     private int score;
     private int move;
 
@@ -43,7 +42,6 @@ public class listDisplay : MonoBehaviour {
         cueBall = cue.GetComponent<rollBall>();
 
         //set beginning data
-        moveChoice = cueBall.getMoveChoice();
         move = cueBall.getMoveChoice();
         score = 0;
 	}
@@ -75,15 +73,20 @@ public class listDisplay : MonoBehaviour {
         //displays controls for different move options
         if (move == 0)
         {
-            moveOption.text = "Left, Right, Up, Down moves stick position \npress spacebar to move to hitting mode";
+            moveOption.text = "Left, Right, Up, and Down arrow keys moves stick position \n" + 
+                               "press spacebar to move to hitting mode\n" + 
+                               "Press 'S' or 'W' to swap cameras";
         }
         else if (move == 1)
         {
-            moveOption.text = "Down Arrow to pull stick back \nUp Arrow to push stick forwards";
+            moveOption.text = "Down Arrow to pull stick back \nUp Arrow to push stick forwards.\n" + 
+                              "Press 'Q' to go back to reposition stick";
         }
         else if (move == 2)
         {
-            moveOption.text = "Wait until balls are stopped then press 'Enter' \nto center stick on ball";
+            moveOption.text = "Wait until balls are stopped then press 'Enter' \n" + 
+                              "to center stick on ball.\n" +
+                              "Use 'S' to Zoom out, and 'W' to Zoom in";
         }
 
         //updates the planet list

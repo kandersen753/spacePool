@@ -43,19 +43,20 @@ public class CameraController : MonoBehaviour
                 //desiredPosition = (transform.position - center.position).normalized * radius + center.position;
             }
 
+            //checks for zoom input
             if (Input.GetAxis("Fire1") != 0)
             {
-                Debug.LogError(dist);
+                //keeps camera from getting ontop of focus point
                 if (dist > 1.0f)
                 {
                     camera.transform.position = Vector3.MoveTowards(camera.transform.position, center, (Input.GetAxis("Fire1") * 5) * Time.deltaTime);
                 }
 
+                //allows camera to back up from close point but not zoom in
                 else if (dist < 1.0f && Input.GetAxis("Fire1") < 0)
                 {
                     camera.transform.position = Vector3.MoveTowards(camera.transform.position, center, (Input.GetAxis("Fire1") * 5) * Time.deltaTime);
                 }
-                //Debug.LogError(camera.transform.forward);
             }
         }
         else

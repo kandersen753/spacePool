@@ -18,8 +18,6 @@ public class rollBall : MonoBehaviour
     public Transform center;
     public Vector3 axisUp = Vector3.up;
     public Vector3 axisRight = Vector3.right;
-    private Vector3 desiredPosition;
-    private float radius = 3.0f;
     public float radiusSpeed = 0.5f;
     public float rotationSpeed = 80.0f;
 
@@ -38,6 +36,8 @@ public class rollBall : MonoBehaviour
         //allows cue to ignore the mesh collider of balls and walls
         ignoreChildren(Walls);
         ignoreChildren(Balls);
+
+        ball.transform.position = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(2.0f, 18.0f), Random.Range(-8.0f, 0.0f));
 
         //moves the cue to the starting posistion
         transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
@@ -67,14 +67,12 @@ public class rollBall : MonoBehaviour
             if (Input.GetAxis("Vertical") != 0) 
 			{
 				transform.RotateAround (center.position, transform.right, (rotationSpeed * Input.GetAxis ("Vertical")) * Time.deltaTime);
-				desiredPosition = (transform.position - center.position).normalized * radius + center.position;
 			}
 
             //checks for left and right input
 			if (Input.GetAxis("Horizontal") != 0)
 			{
 				transform.RotateAround (center.position, transform.forward, (rotationSpeed * Input.GetAxis ("Horizontal")) * Time.deltaTime);
-				desiredPosition = (transform.position - center.position).normalized * radius + center.position;
 			}
 
 			//changes input options so user can hit ball
@@ -84,11 +82,31 @@ public class rollBall : MonoBehaviour
 				rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
 			}
+
+            if (Input.GetAxis("Fire1") != 0)
+            {
+                //changes to movechoice so when enter is pressed again, camera will be back on stick
+                moveChoice = 2;
+
+                //disables main camera
+                transform.GetChild(0).gameObject.SetActive(false);
+            }
 		} 
 
         //when movechoice is one stick moves back and fourth
 		else if (moveChoice == 1) 
 		{
+            if (Input.GetAxis("Fire2")!= 0)
+            {
+                moveChoice = 0;
+                //freeze then unfreeze constraints on the stick
+                rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                rb.constraints = RigidbodyConstraints.None;
+
+                //reset stick position
+                transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
+                transform.localRotation = Quaternion.identity;
+            }
 			Vector3 movement = new Vector3 (0.0f, Input.GetAxis("Vertical"), 0.0f);
 			rb.AddRelativeForce (movement * 10.0f);
 		} 
@@ -104,7 +122,7 @@ public class rollBall : MonoBehaviour
 				transform.position = new Vector3 ((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z)-3);
 				transform.localRotation = Quaternion.identity;
 				moveChoice = 0;
-			}
+            }
 		}
 
     }
