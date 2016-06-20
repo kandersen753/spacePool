@@ -9,6 +9,8 @@ public class rollBall : MonoBehaviour
     public int moveChoice = 0;
 	MeshRenderer rend;
 	Collider collisionDetector;
+    private Color alphaChanger;
+    private int turn;
 
     //ignore collision variables
     public GameObject Walls;
@@ -32,6 +34,7 @@ public class rollBall : MonoBehaviour
 		rb = GetComponent<Rigidbody> ();
 		rend = GetComponent<MeshRenderer> ();
 		collisionDetector = GetComponent<Collider> ();
+        alphaChanger = ball.GetComponent<Renderer>().material.color;
 
         //allows cue to ignore the mesh collider of balls and walls
         ignoreChildren(Walls);
@@ -42,6 +45,7 @@ public class rollBall : MonoBehaviour
         //moves the cue to the starting posistion
         transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
         transform.localRotation = Quaternion.identity;
+        turn = 0;
     }
     
     void ignoreChildren(GameObject parent)
@@ -62,6 +66,17 @@ public class rollBall : MonoBehaviour
 		{
             //reactivate main camera
             transform.GetChild(0).gameObject.SetActive(true);
+            transform.GetChild(1).gameObject.SetActive(true);
+
+
+            alphaChanger.a = .50f;
+            ball.GetComponent<Renderer>().material.SetColor("_Color", alphaChanger);
+
+           
+
+
+            //ball.GetComponent<Renderer>().material.SetColor("_Color", alphaChanger); 
+
 
             //checks for up and down input
             if (Input.GetAxis("Vertical") != 0) 
@@ -86,7 +101,7 @@ public class rollBall : MonoBehaviour
             if (Input.GetAxis("Fire1") != 0)
             {
                 //changes to movechoice so when enter is pressed again, camera will be back on stick
-                moveChoice = 2;
+                moveChoice = 3;
 
                 //disables main camera
                 transform.GetChild(0).gameObject.SetActive(false);
@@ -96,6 +111,10 @@ public class rollBall : MonoBehaviour
         //when movechoice is one stick moves back and fourth
 		else if (moveChoice == 1) 
 		{
+            alphaChanger.a = 1.0f;
+            ball.GetComponent<Renderer>().material.SetColor("_Color", alphaChanger);
+
+            transform.GetChild(1).gameObject.SetActive(false);
             if (Input.GetAxis("Fire2")!= 0)
             {
                 moveChoice = 0;
@@ -114,16 +133,36 @@ public class rollBall : MonoBehaviour
         //when movechoice is two balls are in motion
 		else if (moveChoice == 2) 
 		{
+            
+            transform.GetChild(1).gameObject.SetActive(false);
+
             //when enter is pressed reset cue position and make it reappear
-			if (Input.GetAxis ("Submit") != 0) 
+            if (Input.GetAxis ("Submit") != 0) 
 			{
 				rend.enabled = true;
 				collisionDetector.enabled = true;
 				transform.position = new Vector3 ((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z)-3);
 				transform.localRotation = Quaternion.identity;
 				moveChoice = 0;
+                turn++;
             }
+
 		}
+
+        else if (moveChoice == 3)
+        {
+            if (Input.GetAxis("Fire2") != 0)
+            {
+                moveChoice = 0;
+            }
+
+            if (Input.GetAxis("Submit") != 0)
+            {
+                transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
+                transform.localRotation = Quaternion.identity;
+                moveChoice = 0;
+            }
+        }
 
     }
 
@@ -152,6 +191,11 @@ public class rollBall : MonoBehaviour
     public int getMoveChoice()
     {
         return moveChoice;
+    }
+
+    public int getTurn()
+    {
+        return turn;
     }
 
 

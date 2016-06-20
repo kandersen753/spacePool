@@ -16,11 +16,14 @@ public class listDisplay : MonoBehaviour {
     public Text endDisplay;
     public Text scoreboard;
     public Text moveOption;
+    public Text turn;
 
     //data trackers 
     private bool gameOver;
-    private int score;
+    private int score1;
+    private int score2;
     private int move;
+    private int currentTurn;
 
     //temporary variables
     private string list2;
@@ -43,12 +46,15 @@ public class listDisplay : MonoBehaviour {
 
         //set beginning data
         move = cueBall.getMoveChoice();
-        score = 0;
+        score1 = 0;
+        score2 = 0;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+        currentTurn = (cueBall.getTurn() % 2) + 1;
+
         //gets the current move from rollball
         move = cueBall.getMoveChoice();
 
@@ -80,20 +86,32 @@ public class listDisplay : MonoBehaviour {
         else if (move == 1)
         {
             moveOption.text = "Down Arrow to pull stick back \nUp Arrow to push stick forwards.\n" + 
-                              "Press 'Q' to go back to reposition stick";
+                              "Press 'Q' to go back to reposition stick.";
         }
         else if (move == 2)
         {
             moveOption.text = "Wait until balls are stopped then press 'Enter' \n" + 
-                              "to center stick on ball.\n" +
-                              "Use 'S' to Zoom out, and 'W' to Zoom in";
+                              "to center stick on ball, and reset Cue Position.\n" +
+                              "Use arrow keys to rotate camera around center\n" + 
+                              "Use 'S' to Zoom out, and 'W' to Zoom in.";
+        }
+
+        else if (move == 3)
+        {
+            moveOption.text = "Use 'S' to Zoom out, and 'W' to Zoom in.\n" +
+                              "Use arrow keys to rotate camera around center.\n" +
+                              "Press 'Q' to reposition Cue,\n" + 
+                              "or 'Enter' to reset Cue";
         }
 
         //updates the planet list
         list.text = list2;
 
         //updates the score counter
-        scoreboard.text = "Score: " + score;
+        scoreboard.text = "Player 1 Score: " + score1 + "\n" + "Player 2 Score: " + score2;
+
+        //updates turn display
+        turn.text = "Player " + currentTurn + "'s Turn";
 
         //checks if the game is over
         checkWin();
@@ -125,8 +143,27 @@ public class listDisplay : MonoBehaviour {
 
 
     //function for other scripts to call to change the current score
-    public void changeScore(int value)
+    public void addScore(int value)
     {
-        score = score + value;
+        if (value == 0)
+        {
+            score1 += 1;
+        }
+        else if (value == 1)
+        {
+            score2 += 1;
+        }
+    }
+
+    public void minusScore (int value)
+    {
+        if (value == 0)
+        {
+            score1 -= 1;
+        }
+        else if (value == 1)
+        {
+            score2 -= 1;
+        }
     }
 }

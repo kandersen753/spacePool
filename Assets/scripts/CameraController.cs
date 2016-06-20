@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         movechoice = cue.getMoveChoice();
-        if (movechoice == 2)
+        if (movechoice == 2 || movechoice == 3)
         {
             camera.gameObject.SetActive(true);
             dist = Vector3.Distance(center, camera.transform.position);
