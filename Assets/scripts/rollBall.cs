@@ -6,11 +6,14 @@ public class rollBall : MonoBehaviour
 
     //general variables
     public GameObject ball;
-    public int moveChoice = 0;
-	MeshRenderer rend;
-	Collider collisionDetector;
+    private int moveChoice = 0;
+	private MeshRenderer rend;
+	private Collider collisionDetector;
     private Color alphaChanger;
     private int turn;
+
+    //control use variable
+    public int controlScheme;
 
     //ignore collision variables
     public GameObject Walls;
@@ -18,13 +21,10 @@ public class rollBall : MonoBehaviour
 
     //varialbes for rotation
     public Transform center;
-    public Vector3 axisUp = Vector3.up;
-    public Vector3 axisRight = Vector3.right;
-    public float radiusSpeed = 0.5f;
-    public float rotationSpeed = 80.0f;
+    private float rotationSpeed = 80.0f;
 
     //variables for hitting
-    public float speed;
+    private float speed;
 	private Rigidbody rb;
 
 
@@ -40,10 +40,10 @@ public class rollBall : MonoBehaviour
         ignoreChildren(Walls);
         ignoreChildren(Balls);
 
-        ball.transform.position = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(2.0f, 18.0f), Random.Range(-8.0f, 0.0f));
+        ball.transform.position = new Vector3(Random.Range(-80.0f, 80.0f), Random.Range(20.0f, 180.0f), Random.Range(-80.0f, 0.0f));
 
         //moves the cue to the starting posistion
-        transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
+        transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 30);
         transform.localRotation = Quaternion.identity;
         turn = 0;
     }
@@ -72,96 +72,136 @@ public class rollBall : MonoBehaviour
             alphaChanger.a = .50f;
             ball.GetComponent<Renderer>().material.SetColor("_Color", alphaChanger);
 
-           
+
 
 
             //ball.GetComponent<Renderer>().material.SetColor("_Color", alphaChanger); 
 
-
-            //checks for up and down input
-            if (Input.GetAxis("Vertical") != 0) 
-			{
-				transform.RotateAround (center.position, transform.right, (rotationSpeed * Input.GetAxis ("Vertical")) * Time.deltaTime);
-			}
-
-            //checks for left and right input
-			if (Input.GetAxis("Horizontal") != 0)
-			{
-				transform.RotateAround (center.position, transform.forward, (rotationSpeed * Input.GetAxis ("Horizontal")) * Time.deltaTime);
-			}
-
-			//changes input options so user can hit ball
-			if (Input.GetAxis("Jump") != 0.0f)
-			{
-				moveChoice = 1;
-				rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-
-			}
-
-            if (Input.GetAxis("Fire1") != 0)
+            if (controlScheme == 0)
             {
-                //changes to movechoice so when enter is pressed again, camera will be back on stick
-                moveChoice = 3;
+                //checks for up and down input
+                if (Input.GetAxis("Vertical") != 0)
+                {
+                    transform.RotateAround(center.position, transform.right, (rotationSpeed * Input.GetAxis("Vertical")) * Time.deltaTime);
+                }
 
-                //disables main camera
-                transform.GetChild(0).gameObject.SetActive(false);
+                //checks for left and right input
+                if (Input.GetAxis("Horizontal") != 0)
+                {
+                    transform.RotateAround(center.position, transform.forward, (rotationSpeed * Input.GetAxis("Horizontal")) * Time.deltaTime);
+                }
+
+                //changes input options so user can hit ball
+                if (Input.GetAxis("Jump") != 0.0f)
+                {
+                    moveChoice = 1;
+                    rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+                }
+
+                if (Input.GetAxis("Fire1") != 0)
+                {
+                    //changes to movechoice so when enter is pressed again, camera will be back on stick
+                    moveChoice = 3;
+
+                    //disables main camera
+                    transform.GetChild(0).gameObject.SetActive(false);
+                }
+            }
+
+            else if (controlScheme == 1)
+            {
+
             }
 		} 
 
         //when movechoice is one stick moves back and fourth
 		else if (moveChoice == 1) 
 		{
+            //changes transparency of cueball
             alphaChanger.a = 1.0f;
             ball.GetComponent<Renderer>().material.SetColor("_Color", alphaChanger);
 
+            //disables projection
             transform.GetChild(1).gameObject.SetActive(false);
-            if (Input.GetAxis("Fire2")!= 0)
-            {
-                moveChoice = 0;
-                //freeze then unfreeze constraints on the stick
-                rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                rb.constraints = RigidbodyConstraints.None;
 
-                //reset stick position
-                transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
-                transform.localRotation = Quaternion.identity;
+            if (controlScheme == 0)
+            {
+                if (Input.GetAxis("Fire2") != 0)
+                {
+                    moveChoice = 0;
+                    //freeze then unfreeze constraints on the stick
+                    rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    rb.constraints = RigidbodyConstraints.None;
+
+                    //reset stick position
+                    transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 30);
+                    transform.localRotation = Quaternion.identity;
+                }
+
+                //moves stick towards and away from ball
+                Vector3 movement = new Vector3(0.0f, Input.GetAxis("Vertical"), 0.0f);
+                rb.AddRelativeForce(movement * 100.0f);
             }
-			Vector3 movement = new Vector3 (0.0f, Input.GetAxis("Vertical"), 0.0f);
-			rb.AddRelativeForce (movement * 10.0f);
+
+            else if (controlScheme == 1)
+            {
+
+            }
 		} 
 
         //when movechoice is two balls are in motion
 		else if (moveChoice == 2) 
 		{
-            
+            //ensures projection is disabled
             transform.GetChild(1).gameObject.SetActive(false);
 
-            //when enter is pressed reset cue position and make it reappear
-            if (Input.GetAxis ("Submit") != 0) 
-			{
-				rend.enabled = true;
-				collisionDetector.enabled = true;
-				transform.position = new Vector3 ((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z)-3);
-				transform.localRotation = Quaternion.identity;
-				moveChoice = 0;
-                turn++;
+
+            if (controlScheme == 0)
+            {
+                //when enter is pressed reset cue position and make it reappear
+                if (Input.GetAxis("Submit") != 0)
+                {
+                    rend.enabled = true;
+                    collisionDetector.enabled = true;
+                    transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 30);
+                    transform.localRotation = Quaternion.identity;
+                    moveChoice = 0;
+                    turn++;
+                }
+            }
+
+            else if (controlScheme == 1)
+            {
+
             }
 
 		}
 
+        //moves outside camera for overallview
         else if (moveChoice == 3)
         {
-            if (Input.GetAxis("Fire2") != 0)
+            if (controlScheme == 0)
             {
-                moveChoice = 0;
+                if (Input.GetAxis("Fire2") != 0)
+                {
+                    moveChoice = 0;
+                }
+
+                if (Input.GetAxis("Submit") != 0)
+                {
+                    transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 30);
+                    transform.localRotation = Quaternion.identity;
+                    moveChoice = 0;
+                }
             }
 
-            if (Input.GetAxis("Submit") != 0)
+            else if (controlScheme == 1)
             {
-                transform.position = new Vector3((ball.transform.position.x), (ball.transform.position.y), (ball.transform.position.z) - 3);
-                transform.localRotation = Quaternion.identity;
-                moveChoice = 0;
+
             }
+
+
         }
 
     }
@@ -193,11 +233,16 @@ public class rollBall : MonoBehaviour
         return moveChoice;
     }
 
+    //returns the current players turn
     public int getTurn()
     {
         return turn;
     }
 
-
+    //returns the selected controller scheme
+    public int getControlScheme()
+    {
+        return controlScheme;
+    }
 
 }

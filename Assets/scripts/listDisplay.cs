@@ -24,6 +24,7 @@ public class listDisplay : MonoBehaviour {
     private int score2;
     private int move;
     private int currentTurn;
+    private int controlScheme;
 
     //temporary variables
     private string list2;
@@ -46,6 +47,7 @@ public class listDisplay : MonoBehaviour {
 
         //set beginning data
         move = cueBall.getMoveChoice();
+        controlScheme = cueBall.getControlScheme();
         score1 = 0;
         score2 = 0;
 	}
@@ -53,6 +55,7 @@ public class listDisplay : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        //turns just constantly increases, use mod to get 0 or 1
         currentTurn = (cueBall.getTurn() % 2) + 1;
 
         //gets the current move from rollball
@@ -77,31 +80,34 @@ public class listDisplay : MonoBehaviour {
         }
 
         //displays controls for different move options
-        if (move == 0)
+        if (controlScheme == 0)
         {
-            moveOption.text = "Left, Right, Up, and Down arrow keys moves stick position \n" + 
-                               "press spacebar to move to hitting mode\n" + 
-                               "Press 'S' or 'W' to swap cameras";
-        }
-        else if (move == 1)
-        {
-            moveOption.text = "Down Arrow to pull stick back \nUp Arrow to push stick forwards.\n" + 
-                              "Press 'Q' to go back to reposition stick.";
-        }
-        else if (move == 2)
-        {
-            moveOption.text = "Wait until balls are stopped then press 'Enter' \n" + 
-                              "to center stick on ball, and reset Cue Position.\n" +
-                              "Use arrow keys to rotate camera around center\n" + 
-                              "Use 'S' to Zoom out, and 'W' to Zoom in.";
-        }
+            if (move == 0)
+            {
+                moveOption.text = "Left, Right, Up, and Down arrow keys moves stick position \n" +
+                                   "press spacebar to move to hitting mode\n" +
+                                   "Press 'S' or 'W' to swap cameras";
+            }
+            else if (move == 1)
+            {
+                moveOption.text = "Down Arrow to pull stick back \nUp Arrow to push stick forwards.\n" +
+                                  "Press 'Q' to go back to reposition stick.";
+            }
+            else if (move == 2)
+            {
+                moveOption.text = "Wait until balls are stopped then press 'Enter' \n" +
+                                  "to center stick on ball, and reset Cue Position.\n" +
+                                  "Use arrow keys to rotate camera around center\n" +
+                                  "Use 'S' to Zoom out, and 'W' to Zoom in.";
+            }
 
-        else if (move == 3)
-        {
-            moveOption.text = "Use 'S' to Zoom out, and 'W' to Zoom in.\n" +
-                              "Use arrow keys to rotate camera around center.\n" +
-                              "Press 'Q' to reposition Cue,\n" + 
-                              "or 'Enter' to reset Cue";
+            else if (move == 3)
+            {
+                moveOption.text = "Use 'S' to Zoom out, and 'W' to Zoom in.\n" +
+                                  "Use arrow keys to rotate camera around center.\n" +
+                                  "Press 'Q' to reposition Cue,\n" +
+                                  "or 'Enter' to reset Cue";
+            }
         }
 
         //updates the planet list

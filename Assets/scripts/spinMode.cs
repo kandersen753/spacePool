@@ -49,6 +49,7 @@ public class spinMode : MonoBehaviour {
         //if it hits the cueball, disable the ball and freeze it, then reset its postion and decrement score
         else if (other.gameObject.CompareTag ("resetCue"))
         {
+            Debug.Log("kill cue");
             rb = other.GetComponent<Rigidbody>();
 
             //freezes all constraints in the rigidbody for the cueball
