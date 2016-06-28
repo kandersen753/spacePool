@@ -18,8 +18,8 @@ public class StickRecall : MonoBehaviour
     {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
     }
-
     // Update is called once per frame
+
     void Update()
     {
         var device = SteamVR_Controller.Input((int)trackedObj.index);
@@ -45,7 +45,7 @@ public class StickRecall : MonoBehaviour
             var rigidbody = go.GetComponent<Rigidbody>();
             Object.DestroyImmediate(joint);
             joint = null;
-            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+            //rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
             // We should probably apply the offset between trackedObj.transform.position
             // and device.transform.pos to insert into the physics sim at the correct
@@ -55,16 +55,16 @@ public class StickRecall : MonoBehaviour
             var origin = trackedObj.origin ? trackedObj.origin : trackedObj.transform.parent;
             if (origin != null)
             {
-                rigidbody.velocity = origin.TransformVector(device.velocity*10);
-                rigidbody.angularVelocity = origin.TransformVector(device.angularVelocity*10);
+                rigidbody.velocity = origin.TransformVector(device.velocity*25);
+                rigidbody.angularVelocity = origin.TransformVector(device.angularVelocity*25);
             }
             else
             {
-                rigidbody.velocity = device.velocity*10;
-                rigidbody.angularVelocity = device.angularVelocity*10;
+                rigidbody.velocity = device.velocity*25;
+                rigidbody.angularVelocity = device.angularVelocity*25;
             }
 
-            rigidbody.maxAngularVelocity = rigidbody.angularVelocity.magnitude*10;
+            rigidbody.maxAngularVelocity = rigidbody.angularVelocity.magnitude*25;
         }
     }
 }

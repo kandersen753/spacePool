@@ -111,6 +111,10 @@ public class rollBall : MonoBehaviour
 
             else if (controlScheme == 1)
             {
+                rend.enabled = false;
+                collisionDetector.enabled = false;
+                transform.GetChild(0).gameObject.SetActive(false);
+                transform.GetChild(1).gameObject.SetActive(false);
 
             }
 		} 
