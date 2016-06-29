@@ -7,6 +7,8 @@ public class lightToucher : MonoBehaviour {
     public GameObject rightBall;
     public GameObject upBall;
     public GameObject reset;
+    public GameObject forward;
+    public GameObject backward;
     public SteamVR_TrackedObject trackedObj;
     private bool isTouched = false;
     public GameObject cueBall;
@@ -69,6 +71,14 @@ public class lightToucher : MonoBehaviour {
             {
                 rig.transform.position = new Vector3((cueBall.transform.position.x), (cueBall.transform.position.y), (cueBall.transform.position.z) - 15);
                 rig.transform.localRotation = Quaternion.identity;
+            }
+            else if (other.gameObject == forward)
+            {
+                rig.transform.Translate(new Vector3(0.0f, 0.0f, .05f));
+            }
+            else if (other.gameObject == backward)
+            {
+                rig.transform.Translate(new Vector3(0.0f, 0.0f, -.05f));
             }
         }
     }

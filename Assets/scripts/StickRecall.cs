@@ -45,7 +45,7 @@ public class StickRecall : MonoBehaviour
             var rigidbody = go.GetComponent<Rigidbody>();
             Object.DestroyImmediate(joint);
             joint = null;
-            //rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
             // We should probably apply the offset between trackedObj.transform.position
             // and device.transform.pos to insert into the physics sim at the correct
