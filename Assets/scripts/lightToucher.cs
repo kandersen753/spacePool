@@ -14,6 +14,7 @@ public class lightToucher : MonoBehaviour {
     public GameObject cueBall;
     public Transform center;
     private float rotationSpeed = 20.0f;
+    private float dist;
 
 
     public GameObject rig;
@@ -74,7 +75,12 @@ public class lightToucher : MonoBehaviour {
             }
             else if (other.gameObject == forward)
             {
-                rig.transform.Translate(new Vector3(0.0f, 0.0f, .05f));
+                dist = Vector3.Distance(center.position, rig.transform.position);
+
+                if (dist > 11.75f)
+                {
+                    rig.transform.Translate(new Vector3(0.0f, 0.0f, .05f));
+                }
             }
             else if (other.gameObject == backward)
             {

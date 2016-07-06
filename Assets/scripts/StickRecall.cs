@@ -6,25 +6,37 @@ public class StickRecall : MonoBehaviour
 
     public GameObject prefab;
     public Rigidbody attachPoint;
+    private Quaternion original;
 
     SteamVR_TrackedObject trackedObj;
     FixedJoint joint;
 
-    //Quaternion temp;
+    private Collider collisionDetector;
+    private MeshRenderer rend;
+
+    public rollBall mainScript;
+
 
 
     // Use this for initialization
     void Start()
     {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
+        collisionDetector = prefab.GetComponent<Collider>();
+        rend = prefab.transform.GetChild(0).GetComponent<MeshRenderer>();
+        original = prefab.transform.rotation;
     }
-    // Update is called once per frame
 
+    // Update is called once per frame
     void Update()
     {
         var device = SteamVR_Controller.Input((int)trackedObj.index);
         if (joint == null && device.GetTouchDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            //prefab.transform.rotation = original;
+            mainScript.setMoveChoice(1);
+            rend.enabled = true;
+            collisionDetector.enabled = true;
 
             prefab.transform.position = attachPoint.transform.position;
 
@@ -65,6 +77,7 @@ public class StickRecall : MonoBehaviour
             }
 
             rigidbody.maxAngularVelocity = rigidbody.angularVelocity.magnitude*25;
+            mainScript.setMoveChoice(0);
         }
     }
 }

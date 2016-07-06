@@ -237,6 +237,11 @@ public class rollBall : MonoBehaviour
         return moveChoice;
     }
 
+    public void setMoveChoice(int newChoice)
+    {
+        moveChoice = newChoice;
+    }
+
     //returns the current players turn
     public int getTurn()
     {
